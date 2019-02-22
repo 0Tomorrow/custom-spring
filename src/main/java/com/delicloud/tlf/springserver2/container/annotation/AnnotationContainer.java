@@ -39,7 +39,4 @@ public class AnnotationContainer {
         return reduce.orElseGet(HashSet::new);
     }
 
-    public static Map<String, Map<String, Set<Class>>> get() {
-        return map;
-    }
 }

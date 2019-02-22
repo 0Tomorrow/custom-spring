@@ -1,6 +1,7 @@
 package com.delicloud.tlf.springserver2.factory;
 
 import com.delicloud.tlf.springserver2.exception.SpringException;
+import com.delicloud.tlf.springserver2.util.CollectionUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -72,10 +73,10 @@ public class SpringBeanFactory {
     void injectDependency(Class<? extends Annotation> injectAnnotation) {
         springBeans.forEach((key, value) -> {
             if (value.size() > 1) {
-                throw new SpringException("implementation more than one");
+                throw new SpringException("implementation more than one: " + value);
             }
             if (value.size() == 0) {
-                throw new SpringException("no implementation ");
+                throw new SpringException("no implementation: " + key);
             }
         });
         springBeans.values().stream()
@@ -86,22 +87,14 @@ public class SpringBeanFactory {
                         .filter(field -> field.getAnnotation(injectAnnotation) != null)
                         .forEach(field -> {
                             try {
-                                System.out.println(springBeans.get(field.getType().getName()).get(0));
-                                field.set(object, springBeans.get(field.getType().getName()).get(0));
+                                Object bean = CollectionUtil.getFirst(springBeans.get(field.getType().getName()));
+                                field.set(object, bean);
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             }
                         });
                 }
             );
-//        springBeans.keySet()
-//            .forEach(System.out::println);
     }
-
-    public Map<String, List<Object>> get() {
-        return springBeans;
-    }
-
-
 
 }

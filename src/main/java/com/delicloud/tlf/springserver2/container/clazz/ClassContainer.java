@@ -22,7 +22,4 @@ public class ClassContainer {
         return map.get(scanPackage);
     }
 
-    public static Map<String, Set<Class>> get() {
-        return map;
-    }
 }
